@@ -8,11 +8,16 @@ public class Main {
     public static void main(String[] args) {
         //Heap / Priority Queue
         FilaBanco fila = new FilaBanco();
+
         fila.insertPeople("Fulano", 20);
         fila.insertPeople("Sicrano", 10);
         fila.insertPeople("Vovó", 64);
         fila.insertPeople("Tio", 50);
         fila.insertPeople(new Pessoa("Beltrano", 5));
+
+        Pessoa w = new Pessoa("Waldson", 25);
+
+        w.setIdade(1);
 
         while (fila.getSize() > 0) {
             Pessoa p = fila.peek();

@@ -2,7 +2,7 @@ package br.com.waldson.aula12;
 
 import java.util.Arrays;
 
-public class FilaBanco {
+public class FilaBanco implements  Event{
 
     private Pessoa[] pessoas;
     private int size;//quantos elementos tem
@@ -19,10 +19,12 @@ public class FilaBanco {
     }
 
     public void insertPeople(String nome, int idade) {
-        insertPeople(new Pessoa(nome, idade));
+        Pessoa p = new Pessoa(nome, idade);
+        insertPeople(p);
     }
 
     public void insertPeople(Pessoa pessoa) {
+        pessoa.insertTheOther(this);
         this.ensureCapacity();
         this.pessoas[getSize()] = pessoa;
         heapifyUp(getSize());
@@ -73,7 +75,8 @@ public class FilaBanco {
     }
 
     public void remove() {
-        pessoas[0] = pessoas[getSize() - 1];
+        pessoas[0] = pessoas[size-1];
+        pessoas[getSize() - 1].removeTheOther(this);
         pessoas[getSize() - 1] = null;
         size--;
         heapifyDown(0);
@@ -104,6 +107,22 @@ public class FilaBanco {
             pessoas[index]      = pessoas[childIndex];
             pessoas[childIndex] = tmp;
             heapifyDown(childIndex);
+        }
+    }
+
+    @Override
+    public void notifyEvent(Pessoa pessoa, int idade) {
+        int index = -1;
+        for(int i = 0 ; i < getSize() ; i++){
+            if(pessoa.getNome() == pessoas[i].getNome()){
+                index = i;
+                break;
+            }
+        }
+        if(pessoa.getIdade() > idade){ // idade -> old age.
+            heapifyUp(index);
+        }else{
+            heapifyDown(index);
         }
     }
 }
